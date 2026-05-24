@@ -1,11 +1,22 @@
+# ==============================================================================
+# SECCIÓN: MODELOS DE DATOS DEL INVENTARIO (INVENTARIO)
+# ==============================================================================
+# Este módulo define el esquema de base de datos para la gestión del inventario.
+# Contiene los modelos para Categorías, Productos (equipos de cómputo) y las
+# Asignaciones o Préstamos de equipos a los usuarios finales del sistema.
+
 from django.db import models
 from django.contrib.auth.models import User
 
 
 class Categoria(models.Model):
-    """Categoría de productos de informática."""
+    """
+    Categoría para agrupar los equipos de cómputo/informática (ej. Laptops, Impresoras, Servidores).
+    """
     nombre = models.CharField(max_length=100, unique=True, verbose_name='Nombre')
     descripcion = models.TextField(blank=True, verbose_name='Descripción')
+    
+    # Campo para almacenar la clase CSS de Bootstrap Icons para renderizar íconos dinámicamente en el Frontend
     icono = models.CharField(
         max_length=50,
         default='bi-box',
@@ -24,12 +35,16 @@ class Categoria(models.Model):
 
     @property
     def total_productos(self):
+        """Propiedad calculada para obtener el total de productos asociados a esta categoría."""
         return self.productos.count()
 
 
 class Producto(models.Model):
-    """Producto o equipo de informática."""
+    """
+    Representa un producto, dispositivo o equipo informático individual.
+    """
     
+    # Estados físicos en los que puede encontrarse un equipo
     class Estado(models.TextChoices):
         NUEVO = 'nuevo', 'Nuevo'
         BUENO = 'bueno', 'Buen estado'
@@ -39,14 +54,20 @@ class Producto(models.Model):
 
     nombre = models.CharField(max_length=200, verbose_name='Nombre')
     descripcion = models.TextField(blank=True, verbose_name='Descripción')
+    
+    # Relación de llave foránea hacia Categoría. 
+    # models.PROTECT impide eliminar una categoría si esta contiene productos asociados.
     categoria = models.ForeignKey(
         Categoria,
         on_delete=models.PROTECT,
         related_name='productos',
         verbose_name='Categoría'
     )
+    
     marca = models.CharField(max_length=100, blank=True, verbose_name='Marca')
     modelo = models.CharField(max_length=100, blank=True, verbose_name='Modelo')
+    
+    # Campo único opcional para identificar dispositivos específicos (laptops, PCs, etc.)
     numero_serie = models.CharField(
         max_length=100,
         blank=True,
@@ -54,34 +75,49 @@ class Producto(models.Model):
         null=True,
         verbose_name='Número de serie'
     )
+    
     precio = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
         verbose_name='Precio (USD)'
     )
+    
+    # Cantidad disponible en almacén
     stock = models.PositiveIntegerField(default=0, verbose_name='Stock')
+    
+    # Estado físico actual
     estado = models.CharField(
         max_length=20,
         choices=Estado.choices,
         default=Estado.NUEVO,
         verbose_name='Estado'
     )
+    
+    # Indica si está visible o disponible para préstamos
     disponible = models.BooleanField(default=True, verbose_name='Disponible')
+    
+    # Imagen referencial del producto/dispositivo
     imagen = models.ImageField(
         upload_to='productos/',
         blank=True,
         null=True,
         verbose_name='Imagen'
     )
+    
+    # Lugar físico donde se resguarda el equipo (ej. Almacén A, Oficina 203)
     ubicacion = models.CharField(
         max_length=200,
         blank=True,
         verbose_name='Ubicación',
         help_text='Edificio, piso, sala, etc.'
     )
+    
+    # Fechas de auditoría
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de registro')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Última actualización')
+    
+    # Registro de qué usuario creó o dio de alta este producto
     registrado_por = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -101,34 +137,45 @@ class Producto(models.Model):
 
     @property
     def stock_bajo(self):
+        """Retorna True si quedan 5 o menos existencias del producto."""
         return self.stock <= 5
 
 
 class Asignacion(models.Model):
-    """Asignación de un producto a un usuario o departamento."""
+    """
+    Representa el préstamo o asignación de un equipo del inventario a un empleado/usuario.
+    Permite dar seguimiento a quién tiene cada dispositivo en un momento dado.
+    """
     
     class EstadoAsignacion(models.TextChoices):
-        ACTIVA = 'activa', 'Activa'
-        DEVUELTO = 'devuelto', 'Devuelto'
-        PERDIDO = 'perdido', 'Perdido'
+        ACTIVA = 'activa', 'Activa'       # El equipo está en posesión del usuario
+        DEVUELTO = 'devuelto', 'Devuelto' # El equipo ha regresado al almacén
+        PERDIDO = 'perdido', 'Perdido'   # El equipo se extravió o dañó sin retorno
 
+    # Llave foránea hacia el producto asignado
     producto = models.ForeignKey(
         Producto,
         on_delete=models.CASCADE,
         related_name='asignaciones',
         verbose_name='Producto'
     )
+    
+    # Llave foránea hacia el usuario receptor de la asignación
     asignado_a = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='asignaciones',
         verbose_name='Asignado a'
     )
+    
+    # Departamento de destino de la asignación (ej: Ventas, TI, Recursos Humanos)
     departamento = models.CharField(
         max_length=200,
         blank=True,
         verbose_name='Departamento'
     )
+    
+    # Fechas de préstamo y retorno
     fecha_asignacion = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Fecha de asignación'
@@ -138,16 +185,22 @@ class Asignacion(models.Model):
         null=True,
         verbose_name='Fecha de devolución'
     )
+    
+    # Estado actual de la asignación
     estado = models.CharField(
         max_length=20,
         choices=EstadoAsignacion.choices,
         default=EstadoAsignacion.ACTIVA,
         verbose_name='Estado'
     )
+    
+    # Notas del administrador o gestor (detalles de entrega, reportes de daños, etc.)
     observaciones = models.TextField(
         blank=True,
         verbose_name='Observaciones'
     )
+    
+    # Quién autorizó o registró este préstamo
     asignado_por = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -163,3 +216,4 @@ class Asignacion(models.Model):
 
     def __str__(self):
         return f"{self.producto} → {self.asignado_a.get_full_name() or self.asignado_a.username}"
+
