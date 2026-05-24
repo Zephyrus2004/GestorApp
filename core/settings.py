@@ -1,6 +1,6 @@
 """
 Django settings for portal_uni project.
-Sistema de Productos de Informática - Universidad
+Sistema de Productos de Informatica - InfoTech Shop
 """
 
 import os
@@ -34,6 +34,10 @@ INSTALLED_APPS = [
     # Third-party apps
     'crispy_forms',
     'crispy_bootstrap5',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    'drf_spectacular',
     # Local apps
     'accounts.apps.AccountsConfig',
     'dashboard.apps.DashboardConfig',
@@ -41,6 +45,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -138,3 +143,33 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'dashboard:redirect_dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
+
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",   # Vite dev server
+    "http://127.0.0.1:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
+
+# Django REST Framework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+}
+
+# Spectacular documentation settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'InfoTech Shop API',
+    'DESCRIPTION': 'API REST para el sistema de productos de informática (InfoTech Shop)',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}

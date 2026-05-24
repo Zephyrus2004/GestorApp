@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Acceso de Visitante - Portal Universitario{% endblock %}
+{% block title %}Acceso de Visitante - InfoTech Shop{% endblock %}
 
 {% block content %}
 <div class="container py-5 text-center">
@@ -11,7 +11,7 @@
             Tu cuenta ha sido registrada con el rol de **Visitante**. Tienes acceso restringido de solo lectura en el catálogo de productos.
         </p>
         <p class="text-muted small mb-4">
-            Si necesitas permisos elevados para solicitar equipos, inventariar o gestionar asignaciones, solicita un cambio de rol en la oficina administrativa.
+            Si necesitas permisos elevados para gestionar el inventario, realizar ventas o registrar productos, solicita un cambio de rol en el departamento de administración de la tienda.
         </p>
         <div class="d-flex justify-content-center gap-3">
             <a href="{% url 'inventario:producto_lista' %}" class="btn btn-primary-gradient">

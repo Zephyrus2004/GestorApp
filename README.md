@@ -1,6 +1,6 @@
-# 🖥️ Portal Universitario — Sistema de Productos de Informática
+# 🖥️ InfoTech Shop — Sistema de Productos de Informática
 
-Sistema web para la gestión de productos y equipos de informática en una universidad, construido con **Django 5.x** y **Bootstrap 5**.
+Sistema web para la gestión de productos y equipos de informática, construido con **Django 5.x** y **Bootstrap 5**.
 
 ## 🚀 Características
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Iniciar Sesión - Portal Universitario{% endblock %}
+{% block title %}Iniciar Sesión - InfoTech Shop{% endblock %}
 
 {% block content %}
 <section class="auth-section">
@@ -11,7 +11,7 @@
                 <i class="bi bi-shield-lock-fill"></i>
             </div>
             <h1>Iniciar Sesión</h1>
-            <p>Accede al portal tecnológico universitario</p>
+            <p>Accede al portal de gestión de inventario IT</p>
         </div>
 
         <form method="post" novalidate>
@@ -40,13 +40,13 @@
             {% endfor %}
 
             <button type="submit" class="btn btn-primary-gradient w-100 py-2 mt-2">
-                <i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Portal
+                <i class="bi bi-box-arrow-in-right me-1"></i> Entrar a la Tienda
             </button>
         </form>
 
         <div class="auth-footer text-center">
-            <p class="mb-0 text-muted" style="font-size: 0.85rem;">
-                ¿No tienes una cuenta? <a href="{% url 'accounts:register' %}" class="ms-1">Regístrate aquí</a>
+            <p class="mb-0 text-white" style="font-size: 0.85rem;">
+                ¿No tienes una cuenta? <a href="{% url 'accounts:register' %}" class="ms-1 text-white fw-bold">Regístrate aquí</a>
             </p>
         </div>
     </div>

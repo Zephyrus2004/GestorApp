@@ -3,3 +3,6 @@ pillow>=10.0.0
 python-dotenv>=1.0.0
 django-crispy-forms>=2.0
 crispy-bootstrap5>=2024.1
+djangorestframework
+django-cors-headers
+drf-spectacular

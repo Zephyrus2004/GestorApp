@@ -47,7 +47,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     get_email.short_description = 'Correo'
     get_email.admin_order_field = 'user__email'
 
-    actions = ['hacer_gestor', 'hacer_usuario', 'hacer_visitante']
+    actions = ['hacer_gestor', 'hacer_usuario']
 
     @admin.action(description='Cambiar rol a Gestor')
     def hacer_gestor(self, request, queryset):
@@ -58,11 +58,6 @@ class UserProfileAdmin(admin.ModelAdmin):
     def hacer_usuario(self, request, queryset):
         count = queryset.update(rol=UserProfile.Rol.USUARIO)
         self.message_user(request, f'{count} usuario(s) actualizados a Usuario.')
-
-    @admin.action(description='Cambiar rol a Visitante')
-    def hacer_visitante(self, request, queryset):
-        count = queryset.update(rol=UserProfile.Rol.VISITANTE)
-        self.message_user(request, f'{count} usuario(s) actualizados a Visitante.')
 
 
 # Reemplazar el admin de User por defecto

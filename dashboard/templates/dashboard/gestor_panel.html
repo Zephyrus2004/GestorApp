@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Panel de Gestor - Portal Universitario{% endblock %}
+{% block title %}Panel de Gestor - InfoTech Shop{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -51,7 +51,7 @@
                         <tbody>
                             {% for producto in productos_bajo_stock %}
                             <tr>
-                                <td class="text-white font-weight-600">{{ producto.nombre }}</td>
+                                <td class="text-dark font-weight-600">{{ producto.nombre }}</td>
                                 <td class="text-danger font-weight-700">{{ producto.stock }} unidades</td>
                                 <td>{{ producto.ubicacion|default:"No especificada" }}</td>
                             </tr>
@@ -93,7 +93,7 @@
                         <tbody>
                             {% for producto in productos_recientes %}
                             <tr>
-                                <td class="text-white font-weight-600">{{ producto.nombre }}</td>
+                                <td class="text-dark font-weight-600">{{ producto.nombre }}</td>
                                 <td>
                                     <span class="badge-status badge-{{ producto.estado }}">
                                         {{ producto.get_estado_display }}

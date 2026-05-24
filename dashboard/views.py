@@ -23,10 +23,9 @@ def redirect_dashboard(request):
         'admin': 'dashboard:admin_panel',
         'gestor': 'dashboard:gestor_panel',
         'usuario': 'dashboard:usuario_panel',
-        'visitante': 'dashboard:visitante',
     }
     
-    target = redirect_map.get(profile.rol, 'dashboard:visitante')
+    target = redirect_map.get(profile.rol, 'dashboard:usuario_panel')
     return redirect(target)
 
 
@@ -70,10 +69,7 @@ def usuario_panel(request):
     return render(request, 'dashboard/usuario_panel.html', context)
 
 
-@login_required
-def visitante_view(request):
-    """Vista del visitante."""
-    return render(request, 'dashboard/visitante.html')
+
 
 
 @login_required

@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Panel de Usuario - Portal Universitario{% endblock %}
+{% block title %}Catálogo - InfoTech Shop{% endblock %}
 
 {% block content %}
 <div class="container py-4">
     <div class="dashboard-header mb-4">
-        <h1 class="text-white">Portal Tecnológico de Informática</h1>
+        <h1 class="text-white">Portal de Consulta IT</h1>
         <span class="greeting">Bienvenido, {{ user.get_full_name|default:user.username }}</span>
     </div>
 
@@ -15,7 +15,7 @@
             <div class="col-md-8">
                 <h2 class="text-white font-weight-800 mb-2">Consulta de Inventario de Equipos</h2>
                 <p class="text-muted mb-4 fs-5">
-                    Tienes acceso para visualizar todos los equipos informáticos, verificar su disponibilidad y solicitar soporte o préstamos.
+                    Tienes acceso para visualizar todo nuestro catálogo de equipos, verificar la disponibilidad de productos en stock y consultar especificaciones técnicas.
                 </p>
                 <div class="d-flex gap-3">
                     <a href="{% url 'inventario:producto_lista' %}" class="btn btn-primary-gradient">
@@ -43,7 +43,7 @@
                 <i class="bi bi-chat-left-text-fill text-primary-400 fs-1 mb-3"></i>
                 <h3 class="h5 text-white font-weight-800 mb-2">Soporte Técnico IT</h3>
                 <p class="text-muted mb-0 small">
-                    Si necesitas un equipo o software no listado, contáctanos en la oficina de Informática del Piso 2.
+                    Si necesitas asesoría o deseas realizar un pedido personalizado, puedes contactarnos en el mostrador principal o llamando a soporte técnico.
                 </p>
             </div>
         </div>

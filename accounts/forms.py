@@ -30,7 +30,7 @@ class RegisterForm(UserCreationForm):
         required=True,
         widget=forms.EmailInput(attrs={
             'class': 'form-control',
-            'placeholder': 'correo@universidad.edu',
+            'placeholder': 'correo@ejemplo.com',
         })
     )
     first_name = forms.CharField(

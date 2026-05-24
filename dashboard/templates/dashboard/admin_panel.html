@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Panel de Administración - Portal Universitario{% endblock %}
+{% block title %}Panel de Administración - InfoTech Shop{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -66,7 +66,7 @@
                         <tbody>
                             {% for producto in productos_recientes %}
                             <tr>
-                                <td class="text-white font-weight-600">{{ producto.nombre }}</td>
+                                <td class="text-dark font-weight-600">{{ producto.nombre }}</td>
                                 <td>{{ producto.categoria.nombre }}</td>
                                 <td>
                                     <span class="badge-status badge-{{ producto.estado }}">

@@ -9,7 +9,6 @@ class UserProfile(models.Model):
         ADMIN = 'admin', 'Administrador'
         GESTOR = 'gestor', 'Gestor'
         USUARIO = 'usuario', 'Usuario'
-        VISITANTE = 'visitante', 'Visitante'
 
     user = models.OneToOneField(
         User,
@@ -20,7 +19,7 @@ class UserProfile(models.Model):
     rol = models.CharField(
         max_length=20,
         choices=Rol.choices,
-        default=Rol.VISITANTE,
+        default=Rol.USUARIO,
         verbose_name='Rol'
     )
     avatar = models.ImageField(
@@ -67,7 +66,3 @@ class UserProfile(models.Model):
     @property
     def is_usuario(self):
         return self.rol == self.Rol.USUARIO
-
-    @property
-    def is_visitante(self):
-        return self.rol == self.Rol.VISITANTE

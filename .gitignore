@@ -35,3 +35,7 @@ Thumbs.db
 # Coverage
 htmlcov/
 .coverage
+
+# Node
+node_modules/
+dist/
