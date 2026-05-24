@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Registrarse - Portal Universitario{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card" style="max-width: 500px;">
+        <div class="auth-card-header">
+            <div class="auth-icon">
+                <i class="bi bi-person-plus-fill"></i>
+            </div>
+            <h1>Crear Cuenta</h1>
+            <p>Regístrate en el Portal de Informática</p>
+        </div>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger p-2" role="alert" style="font-size: 0.8rem;">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group mb-3">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text|safe }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="text-danger" style="font-size: 0.75rem; margin-top: 0.25rem;">
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary-gradient w-100 py-2 mt-2">
+                <i class="bi bi-person-plus me-1"></i> Completar Registro
+            </button>
+        </form>
+
+        <div class="auth-footer text-center">
+            <p class="mb-0 text-muted" style="font-size: 0.85rem;">
+                ¿Ya tienes una cuenta? <a href="{% url 'accounts:login' %}" class="ms-1">Inicia sesión</a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

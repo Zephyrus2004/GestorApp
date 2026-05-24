@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ producto.nombre }} - Portal Universitario{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Back link -->
+    <div class="mb-4">
+        <a href="{% url 'inventario:producto_lista' %}" class="btn btn-glass btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Inventario
+        </a>
+    </div>
+
+    <!-- Product Header -->
+    <div class="card-glass p-4 mb-5">
+        <div class="row g-4 align-items-center">
+            <div class="col-md-4">
+                <div class="detail-img-container">
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                    {% else %}
+                        <i class="bi {{ producto.categoria.icono|default:'bi-laptop' }} text-muted" style="font-size: 6rem;"></i>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <span class="product-card-category fs-6">{{ producto.categoria.nombre }}</span>
+                <h1 class="text-white font-weight-800 my-2">{{ producto.nombre }}</h1>
+                <p class="text-muted fs-5 mb-4">
+                    {% if producto.marca %}{{ producto.marca }}{% endif %}
+                    {% if producto.modelo %}- {{ producto.modelo }}{% endif %}
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <span class="badge-status badge-{{ producto.estado }} fs-6 py-2 px-3">
+                        {{ producto.get_estado_display }}
+                    </span>
+                    <span class="badge-status {% if producto.disponible %}badge-disponible{% else %}badge-no-disponible{% endif %} fs-6 py-2 px-3">
+                        {% if producto.disponible %}Disponible{% else %}Prestado{% endif %}
+                    </span>
+                </div>
+
+                {% if user.is_superuser or user.profile.rol == 'admin' or user.profile.rol == 'gestor' %}
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'inventario:producto_editar' pk=producto.pk %}" class="btn btn-primary-gradient btn-sm">
+                        <i class="bi bi-pencil me-1"></i> Editar Equipo
+                    </a>
+                    {% if user.is_superuser or user.profile.rol == 'admin' %}
+                    <a href="{% url 'inventario:producto_eliminar' pk=producto.pk %}" class="btn btn-glass btn-sm text-danger border-danger">
+                        <i class="bi bi-trash me-1"></i> Eliminar
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Details & Specification -->
+        <div class="col-lg-6">
+            <div class="card-glass h-100 p-4">
+                <h2 class="section-title mb-4">
+                    <i class="bi bi-info-circle"></i> Especificaciones y Detalles
+                </h2>
+
+                <div class="detail-info">
+                    <div class="info-row">
+                        <div class="info-label">Categoría</div>
+                        <div class="info-value text-white font-weight-600">{{ producto.categoria.nombre }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Número de Serie</div>
+                        <div class="info-value font-monospace text-white">{{ producto.numero_serie|default:"N/A" }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Ubicación</div>
+                        <div class="info-value">{{ producto.ubicacion|default:"No asignada" }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Precio (USD)</div>
+                        <div class="info-value text-success font-weight-700">${{ producto.precio }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Stock en bodega</div>
+                        <div class="info-value text-white">{{ producto.stock }} unidades</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Registrado por</div>
+                        <div class="info-value text-muted">{{ producto.registrado_por.get_full_name|default:producto.registrado_por.username }}</div>
+                    </div>
+                    <div class="info-row" style="border-bottom: none;">
+                        <div class="info-label">Descripción</div>
+                        <div class="info-value">{{ producto.descripcion|default:"Sin descripción del producto." }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignments List -->
+        <div class="col-lg-6">
+            <div class="card-glass h-100 p-4">
+                <h2 class="section-title mb-4">
+                    <i class="bi bi-clock-history"></i> Historial de Asignaciones
+                </h2>
+
+                <div class="table-glass">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Asignado a</th>
+                                <th>Departamento</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for asignacion in asignaciones %}
+                            <tr>
+                                <td>
+                                    <span class="text-white font-weight-600">
+                                        {{ asignacion.asignado_a.get_full_name|default:asignacion.asignado_a.username }}
+                                    </span>
+                                </td>
+                                <td>{{ asignacion.departamento }}</td>
+                                <td>{{ asignacion.fecha_asignacion|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    <span class="badge-role {% if asignacion.estado == 'activa' %}badge-gestor{% elif asignacion.estado == 'devuelto' %}badge-usuario{% else %}badge-admin{% endif %}" style="font-size: 0.7rem;">
+                                        {{ asignacion.get_estado_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">Este equipo nunca ha sido asignado.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Gestor - Portal Universitario{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="dashboard-header mb-4">
+        <h1 class="text-white">Panel de Gestión de Inventario</h1>
+        <span class="greeting">Bienvenido Gestor, {{ user.get_full_name|default:user.username }}</span>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card-glass card-stat">
+                <div class="stat-icon primary">
+                    <i class="bi bi-pc-display-horizontal"></i>
+                </div>
+                <span class="stat-number">{{ total_productos }}</span>
+                <span class="stat-label">Equipos Totales</span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-glass card-stat">
+                <div class="stat-icon warm">
+                    <i class="bi bi-tags-fill"></i>
+                </div>
+                <span class="stat-number">{{ total_categorias }}</span>
+                <span class="stat-label">Categorías</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Low Stock Alert -->
+        <div class="col-lg-6">
+            <div class="card-glass h-100 p-4">
+                <h2 class="section-title mb-4" style="color: var(--danger-400);">
+                    <i class="bi bi-exclamation-triangle text-danger-400"></i> Alertas de Bajo Stock
+                </h2>
+                
+                <div class="table-glass">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Stock</th>
+                                <th>Ubicación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos_bajo_stock %}
+                            <tr>
+                                <td class="text-white font-weight-600">{{ producto.nombre }}</td>
+                                <td class="text-danger font-weight-700">{{ producto.stock }} unidades</td>
+                                <td>{{ producto.ubicacion|default:"No especificada" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">
+                                    <i class="bi bi-check-circle text-success d-block fs-3 mb-2"></i>
+                                    Todo en orden. No hay stock crítico.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Products -->
+        <div class="col-lg-6">
+            <div class="card-glass h-100 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="section-title mb-0">
+                        <i class="bi bi-box-seam"></i> Inventario Reciente
+                    </h2>
+                    <a href="{% url 'inventario:producto_crear' %}" class="btn btn-primary-gradient btn-sm">
+                        <i class="bi bi-plus-lg"></i> Agregar Equipo
+                    </a>
+                </div>
+
+                <div class="table-glass">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos_recientes %}
+                            <tr>
+                                <td class="text-white font-weight-600">{{ producto.nombre }}</td>
+                                <td>
+                                    <span class="badge-status badge-{{ producto.estado }}">
+                                        {{ producto.get_estado_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'inventario:producto_detalle' pk=producto.pk %}" class="text-primary-400 me-2">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'inventario:producto_editar' pk=producto.pk %}" class="text-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">No hay productos registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
