@@ -2,8 +2,8 @@
 // SECCIÓN: CONTEXTO GLOBAL DE AUTENTICACIÓN (REACT CONTEXT)
 // ==============================================================================
 // Este módulo crea y provee un contexto global de React para la autenticación.
-# Guarda el estado de la sesión activa, el token de acceso, controla el proceso
-# de inicio/cierre de sesión y gestiona las solicitudes persistidas en LocalStorage.
+// Guarda el estado de la sesión activa, el token de acceso, controla el proceso
+// de inicio/cierre de sesión y gestiona las solicitudes persistidas en LocalStorage.
 
 import React, { createContext, useState, useEffect, useContext } from 'react'
 import client from '../api/client'
