@@ -32,7 +32,6 @@ services:
   # 2. Sitio Estático para el Frontend (React + Vite)
   - type: web
     name: infotech-frontend
-    plan: free
     runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
