@@ -160,7 +160,10 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 # CORS settings
 cors_env = os.getenv('CORS_ALLOWED_ORIGINS', '')
 if cors_env:
-    CORS_ALLOWED_ORIGINS = cors_env.split(',')
+    CORS_ALLOWED_ORIGINS = [
+        f"https://{origin.strip()}" if not origin.strip().startswith(('http://', 'https://')) else origin.strip()
+        for origin in cors_env.split(',')
+    ]
 else:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:5173",   # Vite dev server

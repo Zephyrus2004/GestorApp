@@ -27,7 +27,7 @@ services:
         fromService:
           type: web
           name: infotech-frontend
-          property: url
+          property: host
 
   # 2. Sitio Estático para el Frontend (React + Vite)
   - type: web
@@ -42,4 +42,4 @@ services:
         fromService:
           type: web
           name: infotech-backend
-          property: url
+          property: host
