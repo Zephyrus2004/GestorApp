@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Administración - InfoTech Shop{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="dashboard-header mb-4">
+        <h1 class="text-white">Panel de Administración</h1>
+        <span class="greeting">Bienvenido, {{ user.get_full_name|default:user.username }}</span>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card-glass card-stat">
+                <div class="stat-icon primary">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <span class="stat-number">{{ total_usuarios }}</span>
+                <span class="stat-label">Usuarios Registrados</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-glass card-stat">
+                <div class="stat-icon accent">
+                    <i class="bi bi-pc-display-horizontal"></i>
+                </div>
+                <span class="stat-number">{{ total_productos }}</span>
+                <span class="stat-label">Equipos en Inventario</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-glass card-stat">
+                <div class="stat-icon warm">
+                    <i class="bi bi-tags-fill"></i>
+                </div>
+                <span class="stat-number">{{ total_categorias }}</span>
+                <span class="stat-label">Categorías Creadas</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Recent Products -->
+        <div class="col-lg-7">
+            <div class="card-glass h-100 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="section-title mb-0">
+                        <i class="bi bi-box-seam"></i> Equipos Recientes
+                    </h2>
+                    <a href="{% url 'inventario:producto_lista' %}" class="btn btn-glass btn-sm">
+                        Ver todo
+                    </a>
+                </div>
+                
+                <div class="table-glass">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos_recientes %}
+                            <tr>
+                                <td class="text-dark font-weight-600">{{ producto.nombre }}</td>
+                                <td>{{ producto.categoria.nombre }}</td>
+                                <td>
+                                    <span class="badge-status badge-{{ producto.estado }}">
+                                        {{ producto.get_estado_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'inventario:producto_detalle' pk=producto.pk %}" class="text-primary-400">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">No hay productos registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Users -->
+        <div class="col-lg-5">
+            <div class="card-glass h-100 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="section-title mb-0">
+                        <i class="bi bi-people"></i> Usuarios Recientes
+                    </h2>
+                    <a href="{% url 'admin:auth_user_changelist' %}" class="btn btn-glass btn-sm">
+                        Gestionar
+                    </a>
+                </div>
+
+                <div class="table-glass">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Rol</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in usuarios_recientes %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="user-avatar-sm" style="width: 28px; height: 28px; border-width: 1px;">
+                                            {% if u.profile.avatar %}
+                                                <img src="{{ u.profile.avatar.url }}" alt="">
+                                            {% else %}
+                                                <i class="bi bi-person-fill" style="font-size: 0.85rem;"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <span class="text-white d-block font-weight-600" style="font-size: 0.85rem;">{{ u.username }}</span>
+                                            <span class="text-muted" style="font-size: 0.75rem;">{{ u.email }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge-role badge-{{ u.profile.rol }}" style="font-size: 0.7rem;">
+                                        {{ u.profile.get_rol_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center text-muted py-4">No hay usuarios registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

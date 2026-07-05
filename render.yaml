@@ -1,0 +1,45 @@
+databases:
+  - name: infotech-db
+    plan: free
+
+services:
+  # 1. Servicio Web para el Backend (Django)
+  - type: web
+    name: infotech-backend
+    plan: free
+    runtime: python
+    buildCommand: ./build.sh
+    startCommand: gunicorn core.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: infotech-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: SEED_DB
+        value: "True"
+      - key: CORS_ALLOWED_ORIGINS
+        fromRoute:
+          type: web
+          name: infotech-frontend
+          property: url
+
+  # 2. Sitio Estático para el Frontend (React + Vite)
+  - type: web
+    name: infotech-frontend
+    plan: free
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromRoute:
+          type: web
+          name: infotech-backend
+          property: url
